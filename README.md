@@ -4,7 +4,7 @@ RentHub is an apartment rental web application built with **Angular 21**. It all
 
 ## 🔗 Links
 - **GitHub:** https://github.com/SuryaPratapSinghRana/RentalHub.git
-- **Live Demo:** https://<your-app>.vercel.app
+- **Live Demo:** https://rental-hub-beryl.vercel.app
 
 ## 🔐 Demo Credentials
 
@@ -55,7 +55,7 @@ Open `http://localhost:4200/` in your browser.
 
 ## 🧪 Testing
 
-The project includes **15 tests** covering authentication, listing services, route guards, components, and routing configuration.
+The project includes **17 tests** covering authentication, listing services, route guards, components, and routing configuration.
 
 Run tests using:
 ```bash

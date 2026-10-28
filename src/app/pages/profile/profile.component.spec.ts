@@ -30,7 +30,8 @@ describe('ProfileComponent', () => {
     });
 
     it('allows the owner to reply to an inquiry', () => {
-        const replyField = fixture.nativeElement.querySelector('textarea[aria-label="Reply to inquiry"]');
-        expect(replyField).not.toBeNull();
+        const replyButton = fixture.nativeElement.querySelector('button.btn-primary');
+        expect(replyButton).not.toBeNull();
+        expect(replyButton.textContent.trim()).toContain('Reply');
     });
 });

@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
+import { vi } from 'vitest';
 import { AuthService } from '../../services/auth.service';
 import { ListingService } from '../../services/listing.service';
 import { ListingDetailsComponent } from './listing-details.component';
@@ -28,8 +29,8 @@ describe('ListingDetailsComponent', () => {
 
     it('shows a delete button for the owner and removes the listing', () => {
         const router = TestBed.inject(Router);
-        spyOn(router, 'navigate');
-        spyOn(window, 'confirm').and.returnValue(true);
+        vi.spyOn(router, 'navigate');
+        vi.spyOn(window, 'confirm').mockReturnValue(true);
 
         const deleteButton = fixture.nativeElement.querySelector('button.btn-danger');
         expect(deleteButton).not.toBeNull();
