@@ -1,0 +1,294 @@
+<div class="container my-4" style="max-width: 900px">
+  <h2>{{ isEdit ? 'Edit Listing' : 'Create New Post' }}</h2>
+
+  @if (saveError) {
+  <div class="alert alert-danger">{{ saveError }}</div>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    @if (!showPreview) {
+    <div class="card p-3 mb-3">
+      <h5>Choose your Apartment/Building</h5>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label" for="propertyType">Property Type</label>
+          <select id="propertyType" class="form-select" formControlName="propertyType">
+            <option value="">Select an option</option>
+            @for (t of propertyTypes; track t) {
+            <option [value]="t">{{ t }}</option>
+            }
+          </select>
+          @if (showError(form.controls.propertyType)) { <div class="error-text">Please select a property type</div> }
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="buildingName">Enter the name of your building</label>
+          <input id="buildingName" class="form-control" formControlName="buildingName">
+          @if (showError(form.controls.buildingName)) { <div class="error-text">Building name is required</div> }
+        </div>
+      </div>
+
+      <h5 class="mt-3">Is this a shared property?</h5>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="sharedYes" formControlName="shared" [value]="true">
+        <label class="form-check-label" for="sharedYes">Yes</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="sharedNo" formControlName="shared" [value]="false">
+        <label class="form-check-label" for="sharedNo">No</label>
+      </div>
+      @if (showError(form.controls.shared)) { <div class="error-text">Please select Yes or No</div> }
+    </div>
+
+    <div class="card p-3 mb-3">
+      <h5>Property Location</h5>
+      <div class="row g-3">
+        <div class="col-md-8">
+          <label class="form-label" for="address">Street Address</label>
+          <input id="address" class="form-control" placeholder="Enter street address" formControlName="address">
+          @if (showError(form.controls.address)) { <div class="error-text">Enter a street address (min 5 characters)
+          </div> }
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="city">City</label>
+          <input id="city" class="form-control" formControlName="city">
+          @if (showError(form.controls.city)) { <div class="error-text">City is required</div> }
+        </div>
+      </div>
+    </div>
+
+    <div class="card p-3 mb-3">
+      <h5>Property Details</h5>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label" for="sqft">Square Feet</label>
+          <input id="sqft" type="number" class="form-control" placeholder="Enter area in square feet"
+            formControlName="sqft">
+          @if (showError(form.controls.sqft)) { <div class="error-text">Enter an area of at least 50 sq ft</div> }
+        </div>
+        <div class="col-md-6">
+          <span class="form-label d-block">Stay / Lease type</span>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" id="leaseLong" formControlName="leaseType" value="long">
+            <label class="form-check-label" for="leaseLong">Long term (6+ months)</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" id="leaseShort" formControlName="leaseType" value="short">
+            <label class="form-check-label" for="leaseShort">Short term</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" id="leaseBoth" formControlName="leaseType" value="both">
+            <label class="form-check-label" for="leaseBoth">Both</label>
+          </div>
+          @if (showError(form.controls.leaseType)) { <div class="error-text">Please choose a lease type</div> }
+        </div>
+      </div>
+    </div>
+
+    <div class="card p-3 mb-3">
+      <h5>Expected Rent</h5>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label" for="rent">Expected Rent</label>
+          <div class="input-group">
+            <span class="input-group-text">₹</span>
+            <input id="rent" type="number" class="form-control" placeholder="Enter expected rent"
+              formControlName="rent">
+          </div>
+          @if (showError(form.controls.rent)) { <div class="error-text">Rent must be greater than 0</div> }
+          <div class="form-check mt-2">
+            <input class="form-check-input" type="checkbox" id="negotiable" formControlName="negotiable">
+            <label class="form-check-label" for="negotiable">Negotiable</label>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <span class="form-label d-block">Price Mode</span>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" id="perMonth" formControlName="priceMode" value="per-month">
+            <label class="form-check-label" for="perMonth">Per Month</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" id="utilities" formControlName="priceMode"
+              value="utilities-included">
+            <label class="form-check-label" for="utilities">Utilities included in rent</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card p-3 mb-3">
+      <h5>Is the room/apartment furnished?</h5>
+      <div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" id="furnYes" formControlName="furnished" [value]="true">
+          <label class="form-check-label" for="furnYes">Yes</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" id="furnNo" formControlName="furnished" [value]="false">
+          <label class="form-check-label" for="furnNo">No</label>
+        </div>
+      </div>
+      @if (showError(form.controls.furnished)) { <div class="error-text">Please select Yes or No</div> }
+
+      <h5 class="mt-3">Vegetarian preference</h5>
+      <div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" id="vegNone" formControlName="vegetarian" value="no-preference">
+          <label class="form-check-label" for="vegNone">No preference</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" id="vegOnly" formControlName="vegetarian" value="veg-only">
+          <label class="form-check-label" for="vegOnly">Vegetarian only</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="card p-3 mb-3">
+      <h5>Amenities included</h5>
+      <div class="row" formGroupName="amenities">
+        @for (a of amenityList; track a) {
+        <div class="col-6 col-md-4">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" [id]="'am-' + a" [formControlName]="a">
+            <label class="form-check-label" [for]="'am-' + a">{{ a }}</label>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+
+    <div class="card p-3 mb-3">
+      <h5>Description</h5>
+      <label class="form-label" for="title">Title</label>
+      <input id="title" class="form-control" placeholder="Enter your AD title" formControlName="title">
+      @if (showError(form.controls.title)) { <div class="error-text">Title must be 10 to 100 characters</div> }
+
+      <label class="form-label mt-3" for="description">Description</label>
+      <textarea id="description" rows="5" class="form-control" maxlength="1400"
+        placeholder="Enter a detailed description within 1400 characters" formControlName="description"></textarea>
+      <small class="text-muted">{{ form.controls.description.value.length }} / 1400</small>
+      @if (showError(form.controls.description)) { <div class="error-text">Description must be at least 30 characters
+      </div> }
+    </div>
+
+    <div class="card p-3 mb-3">
+      <h5>Photos</h5>
+      <input type="file" accept="image/*" multiple class="form-control" aria-label="Upload photos"
+        (change)="onPhotosSelected($event)">
+      <small class="text-muted">Up to 3 photos, 300 KB each.</small>
+      @if (photoError) { <div class="error-text">{{ photoError }}</div> }
+      @if (showError(form.controls.photos)) { <div class="error-text">Please add at least one photo</div> }
+      <div class="d-flex flex-wrap gap-2 mt-2">
+        @for (p of photos; track $index) {
+        <div class="text-center">
+          <img [src]="p" width="120" height="80" style="object-fit: cover" alt="Selected photo">
+          <br>
+          <button type="button" class="btn btn-sm btn-outline-danger mt-1" (click)="removePhoto($index)">Remove</button>
+        </div>
+        }
+      </div>
+    </div>
+
+    <div class="card p-3 mb-3">
+      <h5>Contact Information</h5>
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label" for="contactName">Name</label>
+          <input id="contactName" class="form-control" formControlName="contactName">
+          @if (showError(form.controls.contactName)) { <div class="error-text">Name is required</div> }
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="contactEmail">Email</label>
+          <input id="contactEmail" type="email" class="form-control" formControlName="contactEmail">
+          @if (showError(form.controls.contactEmail)) { <div class="error-text">Enter a valid email</div> }
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="contactPhone">Phone</label>
+          <input id="contactPhone" class="form-control" formControlName="contactPhone">
+          @if (showError(form.controls.contactPhone)) { <div class="error-text">Enter a valid phone number (7 to 15
+            digits)</div> }
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2 mt-3">
+      <button type="button" class="btn btn-primary" (click)="togglePreview()">Preview Listing</button>
+      <a routerLink="/" class="btn btn-secondary">Cancel</a>
+    </div>
+    }
+
+    @else {
+    <div class="preview-page">
+      <h2 class="preview-title">Preview and submit</h2>
+      <p class="preview-subtitle">This is how renters will see your listing.</p>
+
+      <div class="preview-grid">
+        <div class="preview-row">
+          <div class="preview-box">
+            <div class="preview-label">Property type</div>
+            <div class="preview-value">{{ previewListing.propertyType }}</div>
+          </div>
+          <div class="preview-box">
+            <div class="preview-label">Number of beds</div>
+            <div class="preview-value">{{ previewListing.sqft ? '1' : '1' }}</div>
+          </div>
+        </div>
+
+        <div class="preview-row">
+          <div class="preview-box">
+            <div class="preview-label">Address</div>
+            <div class="preview-value">{{ previewListing.address }}, {{ previewListing.city }}</div>
+          </div>
+          <div class="preview-box">
+            <div class="preview-label">Rent</div>
+            <div class="preview-value">{{ previewListing.rent | currency: 'INR' : 'symbol' : '1.0-0' }} per month</div>
+          </div>
+        </div>
+
+        <div class="preview-row">
+          <div class="preview-box">
+            <div class="preview-label">Description</div>
+            <div class="preview-value preview-text">{{ previewListing.description }}</div>
+          </div>
+          <div class="preview-box">
+            <div class="preview-label">Amenities</div>
+            <ul class="preview-list">
+              @for (amenity of previewListing.amenities.slice(0, 5); track amenity) {
+              <li>{{ amenity }}</li>
+              }
+            </ul>
+          </div>
+        </div>
+
+        <div class="preview-row single-row">
+          <div class="preview-box">
+            <div class="preview-label">Lease and furnishing</div>
+            <div class="preview-value">{{ previewListing.leaseType }} term • {{ previewListing.furnished ? 'Furnished' :
+              'Unfurnished' }} • {{ previewListing.vegetarian }}</div>
+          </div>
+          <div class="preview-box">
+            <div class="preview-label">Contact</div>
+            <div class="preview-value preview-contact">{{ previewListing.contactName }}<br>{{
+              previewListing.contactEmail }}<br>{{ previewListing.contactPhone }}</div>
+          </div>
+        </div>
+
+        <div class="preview-row single-row photos-row">
+          <div class="preview-box preview-photos-box">
+            <div class="preview-label">Photos</div>
+            <div class="preview-images">
+              @for (photo of previewListing.photos.slice(0, 3); track $index) {
+              <img [src]="photo" [alt]="previewListing.title + ' photo ' + ($index + 1)" />
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="preview-actions">
+        <button type="button" class="btn btn-primary" (click)="onSubmit()">Submit</button>
+        <button type="button" class="btn btn-light" (click)="showPreview = false">Back to edit</button>
+      </div>
+    </div>
+    }
+  </form>
+</div>

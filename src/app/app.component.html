@@ -1,0 +1,33 @@
+<nav class="main-nav navbar navbar-expand-md">
+  <div class="container nav-shell">
+    <a class="brand" routerLink="/">
+      <span class="brand-mark">R</span>
+      <span class="brand-text">Rental <small>Hub</small></span>
+    </a>
+
+    <button class="nav-toggle navbar-toggler" type="button" aria-label="Toggle navigation"
+      (click)="menuOpen.set(!menuOpen())">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <div class="nav-panel collapse navbar-collapse" [class.show]="menuOpen()">
+      <ul class="nav-links navbar-nav ms-auto">
+        @if (auth.currentUser()) {
+        <li class="nav-item"><a class="nav-link" routerLink="/create" (click)="menuOpen.set(false)">Post</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/profile" (click)="menuOpen.set(false)">Profile</a></li>
+        <li class="nav-item"><a class="nav-link accent-link" href="#"
+            (click)="logout(); $event.preventDefault()">Logout</a></li>
+        } @else {
+        <li class="nav-item"><a class="nav-link" routerLink="/login" (click)="menuOpen.set(false)">Login</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/register" (click)="menuOpen.set(false)">Register</a></li>
+        <li class="nav-item"><a class="nav-link accent-link" routerLink="/profile"
+            (click)="menuOpen.set(false)">Profile</a></li>
+        }
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<router-outlet />

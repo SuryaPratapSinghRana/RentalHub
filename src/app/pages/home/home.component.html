@@ -1,0 +1,119 @@
+<div class="container my-4 home-layout">
+  @if (currentSlide(); as slide) {
+  <div class="featured-panel row g-0 mb-4 overflow-hidden">
+    <div class="col-md-8 position-relative">
+      <img [src]="slide.photos[0]" class="w-100" style="height: 320px; object-fit: cover" [alt]="slide.title">
+      <button class="btn btn-dark position-absolute top-50 start-0 translate-middle-y ms-2" (click)="prevSlide()"
+        aria-label="Previous">&lt;</button>
+      <button class="btn btn-dark position-absolute top-50 end-0 translate-middle-y me-2" (click)="nextSlide()"
+        aria-label="Next">&gt;</button>
+    </div>
+    <div class="col-md-4 featured-copy">
+      <div class="featured-top-row">
+        <span class="eyebrow dark">Featured Listing</span>
+      </div>
+      <h4>{{ slide.title }}</h4>
+      <p class="meta-line">{{ slide.city }} | {{ slide.rent | currency: 'INR' : 'symbol' : '1.0-0' }} / month</p>
+      <p>{{ slide.description.slice(0, 120) }}...</p>
+      <div class="featured-actions">
+        <a class="btn btn-primary btn-sm" [routerLink]="['/listing', slide.id]">View Details</a>
+        <button type="button" class="btn favourite-badge featured-favourite"
+          [class.btn-danger]="interest.isFavourite(slide.id)"
+          [class.btn-outline-danger]="!interest.isFavourite(slide.id)"
+          [title]="interest.isFavourite(slide.id) ? 'Favourite' : 'Save to favourites'"
+          (click)="$event.stopPropagation(); favouriteSlide()" aria-label="Toggle favourite">
+          {{ interest.isFavourite(slide.id) ? '♥' : '♡' }}
+        </button>
+      </div>
+    </div>
+  </div>
+  }
+
+  <div class="card filter-panel p-3 mb-4">
+    <div class="row g-2">
+      <div class="col-md-4">
+        <label class="form-label" for="search">Search</label>
+        <input id="search" class="form-control" placeholder="Title, address or city" [(ngModel)]="searchText"
+          (ngModelChange)="filterChanged()">
+      </div>
+      <div class="col-md-2 col-6">
+        <label class="form-label" for="city">Location</label>
+        <select id="city" class="form-select" [(ngModel)]="city" (ngModelChange)="filterChanged()">
+          <option value="">All</option>
+          @for (c of cities(); track c) {
+          <option [value]="c">{{ c }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-md-2 col-6">
+        <label class="form-label" for="min">Min Price</label>
+        <input id="min" type="number" min="0" class="form-control" [(ngModel)]="minPrice"
+          (ngModelChange)="filterChanged()">
+      </div>
+      <div class="col-md-2 col-6">
+        <label class="form-label" for="max">Max Price</label>
+        <input id="max" type="number" min="0" class="form-control" [(ngModel)]="maxPrice"
+          (ngModelChange)="filterChanged()">
+      </div>
+      <div class="col-md-2 col-6">
+        <label class="form-label" for="sort">Sort By</label>
+        <select id="sort" class="form-select" [(ngModel)]="sortBy" (ngModelChange)="filterChanged()">
+          <option value="newest">Newest</option>
+          <option value="low">Price: Low to High</option>
+          <option value="high">Price: High to Low</option>
+          <option value="size">Largest Area</option>
+        </select>
+      </div>
+    </div>
+    @if (minPrice() !== null && maxPrice() !== null && minPrice()! > maxPrice()!) {
+    <div class="error-text">Min price should not be more than max price</div>
+    }
+    <div class="mt-3 filters-inline">
+      <span class="form-label d-block">Amenities</span>
+      @for (a of amenityList; track a) {
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" [id]="'f-' + a" [checked]="selectedAmenities().includes(a)"
+          (change)="toggleAmenity(a)">
+        <label class="form-check-label" [for]="'f-' + a">{{ a }}</label>
+      </div>
+      }
+    </div>
+    <div class="mt-2">
+      <button class="btn btn-outline-secondary btn-sm" (click)="clearFilters()">Clear Filters</button>
+    </div>
+  </div>
+
+  <div class="results-header">
+    <h3>All Listings</h3>
+    <span>{{ pageListings().length }} matches</span>
+  </div>
+
+  @if (pageListings().length === 0) {
+  <p class="empty-state">No listings found for the selected filters.</p>
+  }
+  <div class="row g-3 listings-grid">
+    @for (l of pageListings(); track l.id) {
+    <div class="col-12 col-md-6 col-lg-4">
+      <app-listing-card [listing]="l" />
+    </div>
+    }
+  </div>
+
+  @if (totalPages() > 1) {
+  <nav class="mt-4">
+    <ul class="pagination justify-content-center flex-wrap">
+      <li class="page-item" [class.disabled]="currentPage() === 1">
+        <button class="page-link" (click)="goToPage(currentPage() - 1)">Previous</button>
+      </li>
+      @for (p of pageNumbers(); track p) {
+      <li class="page-item" [class.active]="p === currentPage()">
+        <button class="page-link" (click)="goToPage(p)">{{ p }}</button>
+      </li>
+      }
+      <li class="page-item" [class.disabled]="currentPage() === totalPages()">
+        <button class="page-link" (click)="goToPage(currentPage() + 1)">Next</button>
+      </li>
+    </ul>
+  </nav>
+  }
+</div>
