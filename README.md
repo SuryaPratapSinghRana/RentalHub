@@ -18,10 +18,14 @@ RentHub is an apartment rental web application built with **Angular 21**. It all
 - Route guards and owner-based listing management.
 - Property search, filtering, sorting, and pagination.
 - Create, edit, and delete apartment listings.
+- Preview and Submit screen before publishing a listing (bonus).
 - Upload up to 3 property images.
 - Add or remove favourites.
 - Send inquiries and post comments with replies.
 - Manage listings, favourites, and inquiries through the profile page.
+
+## 🎁 Bonus Features
+- **Preview and Submit screen (attempted):** after filling the Create Post form, users see a preview page showing the property type, address, rent, description, amenities and photos. From there they can go back to edit or confirm and submit the listing.
 
 ## 🛠️ Tech Stack
 - **Framework:** Angular 21, TypeScript
@@ -36,7 +40,7 @@ RentHub is an apartment rental web application built with **Angular 21**. It all
 **1. Clone the repository**
 ```bash
 git clone https://github.com/SuryaPratapSinghRana/RentalHub.git
-cd RentHub
+cd RentalHub
 ```
 
 **2. Install dependencies**
@@ -51,7 +55,9 @@ npm start
 
 Open `http://localhost:4200/` in your browser.
 
+## 🌐 Deployment
 
+The app is deployed on Vercel. Build command: `npm run build`. Output directory: `dist/renthub/browser`. A `vercel.json` rewrite sends all routes to `index.html`, so refreshing any page works.
 
 ## 🧪 Testing
 
